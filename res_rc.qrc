@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>resources/home.svg</file>
+    <file>resources/icons8-calendar-64.svg</file>
+    <file>resources/icons8-statistics-64.svg</file>
+    <file>resources/icons8-workstation-64.svg</file>
+  </qresource>
+</RCC>

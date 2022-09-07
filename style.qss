@@ -1,0 +1,16 @@
+QPushButton {
+    background-color: red;
+    font-size: 12px;
+    background: none;
+    color: black;
+    border: none;
+    outline: none;
+}
+
+QPushButton#self.btn2_mh {
+    background-color: green;
+}
+
+QPushButton:hover {
+    border: 1px solid grey;
+}
