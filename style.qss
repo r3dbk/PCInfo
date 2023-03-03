@@ -1,14 +1,24 @@
+body {
+    font-weight: 400;
+    font-family: "Segoe UI";
+    color: rgb(224, 0, 0);
+}
+
 QPushButton {
-    background-color: red;
     font-size: 12px;
     background: none;
     color: black;
     border: none;
+    border-right: none;
     outline: none;
 }
 
-QPushButton#self.btn2_mh {
-    background-color: green;
+QLabel#label111, QLabel#label_gpu2, QLabel#label_gpu4, QLabel#label_gpu6, QLabel#label_15 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+QPushButton#btn2mh {
 }
 
 QPushButton:hover {
