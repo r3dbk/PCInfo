@@ -126,27 +126,41 @@ class MyWidget(QMainWindow):
         cur.execute("SELECT * FROM ds_rem;")
         one_ges = cur.fetchall()
         print(login_name + ' login')
+        self.tableWidget.setRowCount(0)
         for any_item in one_ges:
             if any_item[0] == login_name.lower():
                 if show_all == True:
+                    self.tableWidget.insertRow(row)
                     for somethingx in any_item:
+                        print('got')
                         if cou >= 4:
                             x += str(
                                 datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y")) + '; \n'
+                            self.tableWidget.setItem(row, 3, QTableWidgetItem(str(
+                                datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y"))))
                             cou = 0
                         elif cou == 3:
                             x += str(datetime.datetime.strptime(str(somethingx), "%H:%M:%S").strftime("%H:%M")) + ", "
+                            self.tableWidget.setItem(row, 2, QTableWidgetItem(str(datetime.datetime.strptime(str(somethingx), "%H:%M:%S").strftime("%H:%M"))))
+                            cou += 1
+                        elif cou == 2:
+                            x += somethingx + ", "
+                            self.tableWidget.setItem(row, 1, QTableWidgetItem(any_item[-3]))
                             cou += 1
                         else:
                             x += somethingx + ", "
-                            self.tableWidget.setItem(row, 0, QTableWidgetItem(any_item[0]))
+                            self.tableWidget.setItem(row, 0, QTableWidgetItem(any_item[-4]))
                             cou += 1
+                    row += 1
                 elif show_all == 'td':
                     if any_item[4] == str(datetime.date.today().strftime("%Y-%m-%d")):
+                        self.tableWidget.insertRow(row)
                         for somethingx in any_item:
                             if cou >= 4:
                                 x += str(datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime(
                                     "%B %d, %Y")) + '; \n'
+                                self.tableWidget.setItem(row, 3, QTableWidgetItem(str(
+                                    datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y"))))
                                 cou = 0
                             elif cou == 3:
                                 x += str(
@@ -155,9 +169,11 @@ class MyWidget(QMainWindow):
                             else:
                                 x += somethingx + ", "
                                 cou += 1
+                        row += 1
                 else:
                     print(date_on_cal)
                     if any_item[4] == str(date_on_cal.strftime("%Y-%m-%d")):
+                        self.tableWidget.insertRow(row)
                         for somethingx in any_item:
                             if cou >= 4:
                                 x += str(datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime(
@@ -170,6 +186,7 @@ class MyWidget(QMainWindow):
                             else:
                                 x += somethingx + ", "
                                 cou += 1
+                        row += 1
         self.textEdit_2.setText(str(x))
         print(one_ges)
         if x == '':
@@ -181,6 +198,7 @@ class MyWidget(QMainWindow):
         print('ds_rem cleared')
         cur.execute("DELETE FROM ds_rem;")
         conn.commit()
+        self.tableWidget.setRowCount(0)
         self.draw_ev(True)
 
     def login(self):
