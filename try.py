@@ -1,3 +1,7 @@
-import datetime
-somethingx = '02-03-2023'
-print(str(datetime.datetime.strptime(str(somethingx), "%d-%m-%Y").strftime("%B %d, %Y")))
+while True:
+    s = int(input())
+    t = int(input())
+    if s > 4 and t > 2:
+        print("YES")
+    else:
+        print("NO")
