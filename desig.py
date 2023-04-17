@@ -1,8 +1,8 @@
 import sys
-from PyQt6 import uic, QtGui
+from PyQt6 import uic, QtGui, QtCore
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QAbstractItemView, QWidget
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QPixmap
-from PyQt5.QtCore import QStringListModel, Qt
+from PyQt6.QtCore import QStringListModel
 import sqlite3
 import datetime
 import requests
@@ -71,6 +71,9 @@ class MyWidget(QMainWindow):
         self.pushButton_6.clicked.connect(lambda state, show_all=True: self.draw_ev(show_all))
         self.pushButton_7.clicked.connect(lambda state, show_all='td': self.draw_ev(show_all))
         self.pushButton_8.clicked.connect(self.clear_rem)
+        self.pushButton_9.clicked.connect(self.delete_sel)
+        self.pushButton_10.clicked.connect(lambda state, ret=True: self.done_edit(ret))
+        self.pushButton_12.clicked.connect(self.done_edit)
         # self.pushButton_11.clicked.connect(self.check_text)
         self.calendarWidget.clicked.connect(self.calendar_clicked)
         self.tableWidget.setHorizontalHeaderLabels(["Name", "Comment", "Time", "Date"])
@@ -78,11 +81,13 @@ class MyWidget(QMainWindow):
         time_on_cal = self.timeEdit.time().toPyTime()
         self.frame_2.hide()
         self.frame_3.hide()
+        self.frame_4.hide()
         self.cou = 1
         self.model = QStandardItemModel()
         self.listView.setModel(self.model)
         self.listView.setEditTriggers(QAbstractItemView.EditTrigger(0))
         self.listView.doubleClicked.connect(self.change_func)
+        self.listViewList = []
         # self.listView.setModel(self.model)
 
     # def check_text(self):
@@ -116,10 +121,6 @@ class MyWidget(QMainWindow):
     # print(spell('Провереа'))
 
     def registration(self):
-        # self.frame.hide()
-        # self.frame_3.hide()
-        # self.frame_2.show()
-        # print('in')
         if self.lineEdit_3.text() == '':
             self.label_2.setText('This login is already exists')
         else:
@@ -131,8 +132,65 @@ class MyWidget(QMainWindow):
             self.frame_3.hide()
             self.pushButton_4.hide()
 
+    def done_edit(self, ret):
+        element = self.listViewList[self.listView.currentIndex().row()]
+        if ret == True:
+            self.frame_5.show()
+            self.frame_4.hide()
+            self.pushButton_6.show()
+            self.pushButton_7.show()
+            self.pushButton_8.show()
+            self.label_7.show()
+            self.draw_ev(True)
+        else:
+            cur.execute(
+                '''UPDATE ds_rem SET name_rem = ?, text_rem = ?, time = ?, date = ? WHERE login = ? AND name_rem = ? AND text_rem = ? AND time = ? AND date = ?''',
+                (str(self.label_9.text()), str(self.textEdit_3.toPlainText()), str(self.timeEdit_2.time().toPyTime()),
+                 str(self.dateEdit.date().toPyDate()), str(element[-5]), str(element[-4]), str(element[-3]),
+                 str(element[-2]), str(element[-1])))
+            conn.commit()
+            self.frame_5.show()
+            self.frame_4.hide()
+            self.pushButton_6.show()
+            self.pushButton_7.show()
+            self.pushButton_8.show()
+            self.label_7.show()
+            self.draw_ev(True)
+
     def change_func(self, index):
+        tr_res = self.listView.currentIndex().row()
+        element = self.listViewList[tr_res]
         print('GOT! ' + self.listView.currentIndex().data())
+        self.frame_5.hide()
+        self.frame_4.show()
+        self.pushButton_6.hide()
+        self.pushButton_7.hide()
+        self.pushButton_8.hide()
+        self.label_7.hide()
+        self.textEdit_3.setText(str(element[-3]))
+        self.label_9.setText(element[1])
+        self.timeEdit_2.setTime(
+            QtCore.QTime(int(datetime.datetime.strptime(str(element[-2]), "%H:%M:%S").strftime("%H")),
+                         int(datetime.datetime.strptime(str(element[-2]), "%H:%M:%S").strftime("%M"))))
+        self.dateEdit.setDate(QtCore.QDate().fromString(element[-1], "yyyy-MM-dd"))
+        print(self.listViewList[tr_res])
+        print(tr_res)
+        print(self.timeEdit_2.time().toPyTime(), self.dateEdit.date().toPyDate())
+
+    def delete_sel(self):
+        element = self.listViewList[self.listView.currentIndex().row()]
+        cur.execute(
+            '''DELETE FROM ds_rem WHERE login = ? AND name_rem = ? AND text_rem = ? AND time = ? AND date = ?''',
+            (str(element[-5]), str(element[-4]), str(element[-3]),
+             str(element[-2]), str(element[-1])))
+        conn.commit()
+        self.frame_5.show()
+        self.frame_4.hide()
+        self.pushButton_6.show()
+        self.pushButton_7.show()
+        self.pushButton_8.show()
+        self.label_7.show()
+        self.draw_ev(True)
 
     def show_registration_frame(self):
         self.pushButton_4.show()
@@ -163,14 +221,24 @@ class MyWidget(QMainWindow):
         #        str(self.calendarWidget.selectedDate().toPyDate()))
         rem = (login_name, self.lineEdit_6.text(), self.textEdit.toPlainText(), str(self.timeEdit.time().toPyTime()),
                self.calendarWidget.selectedDate().toPyDate())
-        cur.execute("INSERT INTO ds_rem VALUES(?, ?, ?, ?, ?);", rem)
-        conn.commit()
+        cur.execute("SELECT * FROM ds_rem;")
+        one_ges = cur.fetchall()
+        rem_r = (login_name, self.lineEdit_6.text(), self.textEdit.toPlainText(), str(self.timeEdit.time().toPyTime()),
+                 self.calendarWidget.selectedDate().toPyDate().strftime("%Y-%m-%d"))
+        print('HERE             :', one_ges, ' gg ', rem_r)
+        if rem_r in one_ges:
+            print(rem_r, "SUCH ELEMENT ALREADY EXISTS")
+        else:
+            cur.execute("INSERT INTO ds_rem VALUES(?, ?, ?, ?, ?);", rem)
+            conn.commit()
         self.draw_ev(False)
 
     def draw_ev(self, show_all):
         print(show_all)
         row = 0
         x = ""
+        elem = ()
+        self.listViewList = []
         cur.execute("SELECT * FROM ds_rem;")
         one_ges = cur.fetchall()
         self.cou = 1
@@ -182,19 +250,19 @@ class MyWidget(QMainWindow):
                 if show_all == True:
                     self.tableWidget.insertRow(row)
                     for somethingx in any_item:
-
                         if self.cou == 5:
                             print("any_item = 4")
                             print(somethingx)
-
+                            elem = elem + (somethingx,)
                             x += str(
-                                datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y")) + '; \n'
+                                datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y")) + '\n'
                             self.tableWidget.setItem(row, 3, QTableWidgetItem(str(
                                 datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y"))))
                             self.cou = 1
 
                         elif self.cou == 4:
                             print("any_item = 3")
+                            elem = elem + (somethingx,)
                             print(somethingx)
                             x += str(datetime.datetime.strptime(str(somethingx), "%H:%M:%S").strftime("%H:%M")) + ", "
                             self.tableWidget.setItem(row, 2, QTableWidgetItem(
@@ -203,6 +271,7 @@ class MyWidget(QMainWindow):
                             print("count on cou = 3: " + str(self.cou))
                         elif self.cou == 3:
                             print("any_item = 2")
+                            elem = elem + (somethingx,)
                             x += somethingx + ", "
                             self.tableWidget.setItem(row, 1, QTableWidgetItem(somethingx))
                             self.cou += 1
@@ -210,6 +279,7 @@ class MyWidget(QMainWindow):
                         elif self.cou == 2:
                             print("any_item = 1")
                             print(somethingx)
+                            elem = elem + (somethingx,)
                             # print(somethingx + " smthn 2 " + cou)
                             x += somethingx + ", "
                             self.tableWidget.setItem(row, 0, QTableWidgetItem(somethingx))
@@ -217,8 +287,12 @@ class MyWidget(QMainWindow):
                             # self.model.appendRow(QtGui.QStandardItem(any_item[-4]))
                             self.cou += 1
                         elif self.cou == 1:
+                            elem = elem + (somethingx,)
                             self.cou += 1
                     row += 1
+                    print("Elem is: " + str(self.listViewList))
+                    self.listViewList.append(elem)
+                    elem = ()
                     self.model.appendRow(QStandardItem(x))
                     print('that is x: ' + x)
                     x = ''
@@ -227,20 +301,20 @@ class MyWidget(QMainWindow):
                     if any_item[4] == str(datetime.date.today().strftime("%Y-%m-%d")):
                         self.tableWidget.insertRow(row)
                         for somethingx in any_item:
-
                             if self.cou == 5:
                                 print("any_item = 4")
                                 print(somethingx)
-
+                                elem = elem + (somethingx,)
                                 x += str(
                                     datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime(
-                                        "%B %d, %Y")) + '; \n'
+                                        "%B %d, %Y")) + '\n'
                                 self.tableWidget.setItem(row, 3, QTableWidgetItem(str(
                                     datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y"))))
                                 self.cou = 1
 
                             elif self.cou == 4:
                                 print("any_item = 3")
+                                elem = elem + (somethingx,)
                                 print(somethingx)
                                 x += str(
                                     datetime.datetime.strptime(str(somethingx), "%H:%M:%S").strftime("%H:%M")) + ", "
@@ -250,6 +324,7 @@ class MyWidget(QMainWindow):
                                 print("count on cou = 3: " + str(self.cou))
                             elif self.cou == 3:
                                 print("any_item = 2")
+                                elem = elem + (somethingx,)
                                 x += somethingx + ", "
                                 self.tableWidget.setItem(row, 1, QTableWidgetItem(somethingx))
                                 self.cou += 1
@@ -257,6 +332,7 @@ class MyWidget(QMainWindow):
                             elif self.cou == 2:
                                 print("any_item = 1")
                                 print(somethingx)
+                                elem = elem + (somethingx,)
                                 # print(somethingx + " smthn 2 " + cou)
                                 x += somethingx + ", "
                                 self.tableWidget.setItem(row, 0, QTableWidgetItem(somethingx))
@@ -264,8 +340,12 @@ class MyWidget(QMainWindow):
                                 # self.model.appendRow(QtGui.QStandardItem(any_item[-4]))
                                 self.cou += 1
                             elif self.cou == 1:
+                                elem = elem + (somethingx,)
                                 self.cou += 1
                         row += 1
+                        print("Elem is: " + str(self.listViewList))
+                        self.listViewList.append(elem)
+                        elem = ()
                         self.model.appendRow(QStandardItem(x))
                         print('that is x: ' + x)
                         x = ''
@@ -274,20 +354,20 @@ class MyWidget(QMainWindow):
                     if any_item[4] == str(date_on_cal.strftime("%Y-%m-%d")):
                         self.tableWidget.insertRow(row)
                         for somethingx in any_item:
-
                             if self.cou == 5:
                                 print("any_item = 4")
                                 print(somethingx)
-
+                                elem = elem + (somethingx,)
                                 x += str(
                                     datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime(
-                                        "%B %d, %Y")) + '; \n'
+                                        "%B %d, %Y")) + '\n'
                                 self.tableWidget.setItem(row, 3, QTableWidgetItem(str(
                                     datetime.datetime.strptime(str(somethingx), "%Y-%m-%d").strftime("%B %d, %Y"))))
                                 self.cou = 1
 
                             elif self.cou == 4:
                                 print("any_item = 3")
+                                elem = elem + (somethingx,)
                                 print(somethingx)
                                 x += str(
                                     datetime.datetime.strptime(str(somethingx), "%H:%M:%S").strftime("%H:%M")) + ", "
@@ -297,6 +377,7 @@ class MyWidget(QMainWindow):
                                 print("count on cou = 3: " + str(self.cou))
                             elif self.cou == 3:
                                 print("any_item = 2")
+                                elem = elem + (somethingx,)
                                 x += somethingx + ", "
                                 self.tableWidget.setItem(row, 1, QTableWidgetItem(somethingx))
                                 self.cou += 1
@@ -304,6 +385,7 @@ class MyWidget(QMainWindow):
                             elif self.cou == 2:
                                 print("any_item = 1")
                                 print(somethingx)
+                                elem = elem + (somethingx,)
                                 # print(somethingx + " smthn 2 " + cou)
                                 x += somethingx + ", "
                                 self.tableWidget.setItem(row, 0, QTableWidgetItem(somethingx))
@@ -311,8 +393,12 @@ class MyWidget(QMainWindow):
                                 # self.model.appendRow(QtGui.QStandardItem(any_item[-4]))
                                 self.cou += 1
                             elif self.cou == 1:
+                                elem = elem + (somethingx,)
                                 self.cou += 1
                         row += 1
+                        print("Elem is: " + str(self.listViewList))
+                        self.listViewList.append(elem)
+                        elem = ()
                         self.model.appendRow(QStandardItem(x))
                         print('that is x: ' + x)
                         x = ''

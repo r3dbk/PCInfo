@@ -427,22 +427,6 @@
       </rect>
      </property>
     </widget>
-    <widget class="QTextEdit" name="textEdit_2">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>420</y>
-       <width>281</width>
-       <height>171</height>
-      </rect>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QPushButton" name="pushButton_8">
      <property name="geometry">
       <rect>
@@ -472,117 +456,11 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QTableWidget" name="tableWidget">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>410</y>
-       <width>362</width>
-       <height>192</height>
-      </rect>
-     </property>
-     <property name="sizeIncrement">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="tabKeyNavigation">
-      <bool>true</bool>
-     </property>
-     <property name="showDropIndicator" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="dragDropOverwriteMode">
-      <bool>false</bool>
-     </property>
-     <property name="textElideMode">
-      <enum>Qt::ElideRight</enum>
-     </property>
-     <property name="showGrid">
-      <bool>true</bool>
-     </property>
-     <property name="gridStyle">
-      <enum>Qt::DashLine</enum>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="rowCount">
-      <number>8</number>
-     </property>
-     <property name="columnCount">
-      <number>4</number>
-     </property>
-     <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
-     </attribute>
-     <attribute name="horizontalHeaderMinimumSectionSize">
-      <number>32</number>
-     </attribute>
-     <attribute name="horizontalHeaderDefaultSectionSize">
-      <number>90</number>
-     </attribute>
-     <attribute name="horizontalHeaderHighlightSections">
-      <bool>true</bool>
-     </attribute>
-     <attribute name="horizontalHeaderStretchLastSection">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="verticalHeaderDefaultSectionSize">
-      <number>28</number>
-     </attribute>
-     <attribute name="verticalHeaderHighlightSections">
-      <bool>true</bool>
-     </attribute>
-     <attribute name="verticalHeaderStretchLastSection">
-      <bool>false</bool>
-     </attribute>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <column/>
-     <column/>
-     <column/>
-     <column/>
-     <item row="0" column="0">
-      <property name="text">
-       <string>x</string>
-      </property>
-     </item>
-     <item row="0" column="1">
-      <property name="text">
-       <string>y</string>
-      </property>
-     </item>
-     <item row="0" column="2">
-      <property name="text">
-       <string>z</string>
-      </property>
-     </item>
-    </widget>
     <widget class="QFrame" name="frame_4">
      <property name="geometry">
       <rect>
        <x>490</x>
-       <y>220</y>
+       <y>171</y>
        <width>371</width>
        <height>261</height>
       </rect>
@@ -593,33 +471,12 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>351</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Name of the remind</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
      <widget class="QPushButton" name="pushButton_9">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>245</x>
         <y>220</y>
-        <width>156</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
@@ -640,20 +497,20 @@
        <rect>
         <x>14</x>
         <y>220</y>
-        <width>156</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>18</pointsize>
+        <pointsize>14</pointsize>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Discard&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>✍</string>
+       <string>❌</string>
       </property>
      </widget>
      <widget class="QTextEdit" name="textEdit_3">
@@ -680,7 +537,7 @@
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
       <property name="readOnly">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="html">
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -733,40 +590,65 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_12">
+     <widget class="QPushButton" name="pushButton_12">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>175</y>
-        <width>101</width>
-        <height>21</height>
+        <x>140</x>
+        <y>220</y>
+        <width>91</width>
+        <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>Done</string>
+      </property>
       <property name="text">
-       <string>date</string>
+       <string>✅</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>10</y>
+        <width>351</width>
+        <height>21</height>
+       </rect>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_13">
+     <widget class="QDateEdit" name="dateEdit">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>175</y>
-        <width>101</width>
-        <height>21</height>
+        <x>16</x>
+        <y>178</y>
+        <width>110</width>
+        <height>22</height>
        </rect>
       </property>
-      <property name="text">
-       <string>time</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
+     </widget>
+     <widget class="QTimeEdit" name="timeEdit_2">
+      <property name="geometry">
+       <rect>
+        <x>239</x>
+        <y>178</y>
+        <width>118</width>
+        <height>22</height>
+       </rect>
       </property>
      </widget>
     </widget>
     <widget class="QFrame" name="frame_5">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>486</x>
@@ -789,6 +671,11 @@ p, li { white-space: pre-wrap; }
         <width>361</width>
         <height>261</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
       <property name="itemAlignment">
        <set>Qt::AlignCenter</set>
